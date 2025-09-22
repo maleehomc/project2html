@@ -427,7 +427,7 @@
 
     <script>
         // ====== CONFIG ======
-        const NGROK_PUBLIC = "https://a5f40c33adb3.ngrok-free.app";
+        const NGROK_PUBLIC = "https://2e230dd56552.ngrok-free.app";
         const WS_BASE = NGROK_PUBLIC ? NGROK_PUBLIC.replace(/^http/i, "ws") :
             (location.protocol === "https:" ? "wss://" : "ws://") + (location.host || "localhost:8000");
         const WS_URL = (sessionId) => `${WS_BASE}/ws/${sessionId}`;
@@ -814,4 +814,5 @@
 
 
 </html>
+
 
