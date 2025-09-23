@@ -19,47 +19,35 @@
             --card-radius: 16px;
             --shadow: 0 6px 20px rgba(0, 0, 0, .06)
         }
-        
-        * {
-            box-sizing: border-box
-        }
-        
-        html,
-        body {
-            height: 100%
-        }
-        
+
+        * { box-sizing: border-box }
+
+        html, body { height: 100% }
+
         body {
             margin: 0;
             font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
             background: var(--bg);
             color: var(--ink)
         }
-        
-        .container {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto
-        }
-        
+
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto }
+
         .grid-top {
             display: grid;
             grid-template-columns: 1fr 1.1fr 1fr;
             gap: 18px
         }
-        
+
         .card {
             background: var(--panel);
             border-radius: var(--card-radius);
             box-shadow: var(--shadow);
             padding: 18px
         }
-        
-        .card h3 {
-            margin: 0 0 12px;
-            font-weight: 700
-        }
-        
+
+        .card h3 { margin: 0 0 12px; font-weight: 700 }
+
         .stat {
             display: flex;
             justify-content: space-between;
@@ -70,7 +58,7 @@
             border-radius: 12px;
             background: #fffaf7
         }
-        
+
         .badge {
             display: inline-flex;
             align-items: center;
@@ -81,14 +69,9 @@
             border: 1px solid var(--muted);
             background: #fff
         }
-        
-        .pill {
-            padding: 6px 10px;
-            border-radius: 10px;
-            background: #fff0e8;
-            border: 1px solid #ffd7c3
-        }
-        
+
+        .pill { padding: 6px 10px; border-radius: 10px; background: #fff0e8; border: 1px solid #ffd7c3 }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -100,30 +83,23 @@
             font-weight: 700;
             cursor: pointer
         }
-        
-        .btn:disabled {
-            opacity: .6;
-            cursor: not-allowed
-        }
-        
+
+        .btn:disabled { opacity: .6; cursor: not-allowed }
+
         .btn-primary {
             background: linear-gradient(180deg, var(--brand), var(--brand-2));
             color: #fff;
             box-shadow: 0 8px 20px rgba(255, 107, 44, .25)
         }
-        
+
         .btn-ghost {
             background: #f1eee9;
             border: 1px solid var(--muted);
             color: #4c3f3a
         }
-        
-        .drills {
-            display: flex;
-            flex-direction: column;
-            gap: 10px
-        }
-        
+
+        .drills { display: flex; flex-direction: column; gap: 10px }
+
         .drill {
             padding: 10px 12px;
             border-radius: 12px;
@@ -132,30 +108,28 @@
             cursor: pointer;
             text-align: left
         }
-        
+
         .drill.active {
             background: linear-gradient(180deg, #ffe2d6, #ffd3bf);
             border-color: #ffc5ae
         }
-        
-        .live {
-            margin-top: 20px
-        }
-        
+
+        .live { margin-top: 20px }
+
         .live h3 {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 12px
         }
-        
+
         .panel-live {
             background: #e7dfd8;
             border: 1px solid #d6cdc6;
             border-radius: 18px;
             padding: 14px
         }
-        
+
         .cam-wrap {
             position: relative;
             width: 100%;
@@ -165,14 +139,15 @@
             overflow: hidden;
             background: #d8cfc8
         }
-        
+
+        /* เปลี่ยนเฟรมกล้องเป็นแนวตั้ง 9:16 */
         .cam-aspect {
             position: relative;
             width: 100%;
-            padding-top: 56.25%
+            aspect-ratio: 9 / 16; /* portrait */
+            height: auto;
         }
-        
-        .cam-aspect>* {
+        .cam-aspect > * {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -180,53 +155,22 @@
             object-fit: cover;
             background: #000
         }
-        
-        .overlay {
-            position: absolute;
-            inset: 0;
-            pointer-events: none
-        }
-        
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 8px
-        }
-        
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%
-        }
-        
-        .waiting .dot {
-            background: var(--warn)
-        }
-        
-        .active .dot {
-            background: var(--ok)
-        }
-        
-        .finished .dot {
-            background: #7aa7ff
-        }
-        
-        .error .dot {
-            background: var(--err)
-        }
-        
-        .row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap
-        }
-        
-        .hint {
-            font-size: 12px;
-            opacity: .75
-        }
-        
+
+        .overlay { position: absolute; inset: 0; pointer-events: none }
+
+        .status { display: inline-flex; align-items: center; gap: 8px; margin-left: 8px }
+
+        .dot { width: 10px; height: 10px; border-radius: 50% }
+
+        .waiting .dot { background: var(--warn) }
+        .active .dot { background: var(--ok) }
+        .finished .dot { background: #7aa7ff }
+        .error .dot { background: var(--err) }
+
+        .row { display: flex; gap: 10px; flex-wrap: wrap }
+
+        .hint { font-size: 12px; opacity: .75 }
+
         .kbd {
             padding: 2px 6px;
             border: 1px solid #ccbfb6;
@@ -234,28 +178,19 @@
             background: #fff;
             font-family: ui-monospace, Menlo, Consolas, monospace
         }
+
         /* === ปุ่ม-อินพุตหน้าตาเหมือนปุ่ม Ghost + Grid ให้บาลานซ์ === */
-        
         .controls {
             display: grid;
             grid-template-columns: repeat(2, minmax(220px, 1fr));
             gap: 12px;
             pointer-events: auto;
         }
-        
-        .controls>* {
-            height: 48px
-        }
-        
-        .controls .span-2 {
-            grid-column: 1 / -1
-        }
-        
-        .controls .btn,
-        .controls .btn-field {
-            width: 100%
-        }
-        
+
+        .controls > * { height: 48px }
+        .controls .span-2 { grid-column: 1 / -1 }
+        .controls .btn, .controls .btn-field { width: 100% }
+
         .btn-field {
             display: inline-flex;
             align-items: center;
@@ -270,14 +205,14 @@
             width: 100%;
             pointer-events: auto;
         }
-        
+
         .btn-field label {
             font-size: 12px;
             opacity: .8;
             margin-right: 6px;
             white-space: nowrap
         }
-        
+
         .btn-field input,
         .btn-field select {
             border: none;
@@ -293,18 +228,16 @@
             -moz-appearance: none;
             appearance: none;
         }
-        
-        .btn-field input[type="number"] {
-            width: 88px
-        }
-        
+
+        .btn-field input[type="number"] { width: 88px }
+
         .btn-field .select-wrap {
             position: relative;
             flex: 1;
             display: flex;
             justify-content: flex-end
         }
-        
+
         .btn-field .select-wrap::after {
             content: "▾";
             position: absolute;
@@ -314,19 +247,12 @@
             pointer-events: none;
             opacity: .6
         }
-        
-        .btn-field select {
-            padding-right: 18px;
-            max-width: 100%
-        }
-        
+
+        .btn-field select { padding-right: 18px; max-width: 100% }
+
         @media (max-width:1024px) {
-            .grid-top {
-                grid-template-columns: 1fr
-            }
-            .controls {
-                grid-template-columns: 1fr
-            }
+            .grid-top { grid-template-columns: 1fr }
+            .controls { grid-template-columns: 1fr }
         }
     </style>
 </head>
@@ -352,7 +278,6 @@
             <div class="card">
                 <h3>📷 Camera Control</h3>
 
-                <!-- Grid 2 คอลัมน์ ให้บาลานซ์ + ใส่ id/ type ให้ปุ่ม -->
                 <div class="controls" style="margin-top:8px">
                     <button type="button" class="btn btn-primary" id="btnStart">▶ Start Training</button>
                     <button type="button" class="btn btn-ghost" id="btnReset">↻ Reset Session</button>
@@ -361,8 +286,8 @@
                         <label for="fpsSel">FPS</label>
                         <div class="select-wrap">
                             <select id="fpsSel">
-                <option>8</option><option selected>12</option><option>15</option><option>20</option>
-              </select>
+                                <option>8</option><option selected>12</option><option>15</option><option>20</option>
+                            </select>
                         </div>
                     </div>
 
@@ -371,16 +296,17 @@
                         <input id="jpgQ" type="number" value="0.65" min="0.25" max="0.9" step="0.05" />
                     </div>
 
+                    <!-- ปรับตัวเลือก Resize เป็นแนวตั้ง -->
                     <div class="btn-field span-2">
                         <label for="sizeSel">Resize</label>
                         <div class="select-wrap" style="max-width:320px">
                             <select id="sizeSel">
-                <option value="320x240">320×240</option>
-                <option value="426x240" selected>426×240</option>
-                <option value="640x360">640×360</option>
-                <option value="960x540">960×540 (HQ)</option>
-                <option value="1280x720">1280×720 (HD)</option>
-              </select>
+                                <option value="240x426" selected>240×426</option>
+                                <option value="360x640">360×640</option>
+                                <option value="540x960">540×960 (HQ)</option>
+                                <option value="720x1280">720×1280 (HD)</option>
+                                <option value="1080x1920">1080×1920 (FHD)</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -435,8 +361,8 @@
 
         const $ = (id) => document.getElementById(id);
         const statusBox = $("status"),
-            statusText = $("statusText"),
-            sessionBadge = $("sessionId");
+              statusText = $("statusText"),
+              sessionBadge = $("sessionId");
 
         const btnStart = $("btnStart");
         const btnReset = $("btnReset");
@@ -453,18 +379,14 @@
         const statDrill = $("statDrill");
 
         let currentMode = "dribble";
-        let ws = null,
-            streaming = false,
-            hbId = null,
-            rafId = null,
-            sendingNow = false;
+        let ws = null, streaming = false, hbId = null, rafId = null, sendingNow = false;
         let session_id = "user_" + Math.floor(Math.random() * 1e6);
         sessionBadge.textContent = session_id;
 
         // ====== LOCAL TIMER ======
-        let timerId = null; // setInterval handle
-        let baseElapsedMs = 0; // เวลาสะสมก่อนหน้า (เช่น หลัง pause/reconnect)
-        let startEpoch = null; // เวลาเริ่มรอบปัจจุบัน (Date.now())
+        let timerId = null;      // setInterval handle
+        let baseElapsedMs = 0;   // เวลาสะสมก่อนหน้า
+        let startEpoch = null;   // เวลาเริ่มรอบปัจจุบัน
 
         function formatMMSS(ms) {
             const total = Math.floor(ms / 1000);
@@ -483,9 +405,7 @@
             }, 250);
         }
 
-        function stopTimer({
-            keepDisplay = true
-        } = {}) {
+        function stopTimer({ keepDisplay = true } = {}) {
             if (timerId) {
                 clearInterval(timerId);
                 timerId = null;
@@ -509,17 +429,10 @@
         // =========================
 
         const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d", {
-            alpha: false,
-            desynchronized: true
-        });
+        const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
 
-        let lastSend = 0,
-            targetInterval = 1000 / 12,
-            adaptiveQ = 0.65,
-            consecSkips = 0;
-        let currentStream = null,
-            facing = "user";
+        let lastSend = 0, targetInterval = 1000 / 12, adaptiveQ = 0.65, consecSkips = 0;
+        let currentStream = null, facing = "user";
 
         function setStatus(state, text) {
             statusBox.classList.remove("waiting", "active", "finished", "error");
@@ -535,10 +448,7 @@
             currentMode = btn.getAttribute("data-mode");
             if (statDrill) statDrill.textContent = btn.textContent.replace(/^\d+\.\s*/, "");
             if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({
-                    type: "change_mode",
-                    class: currentMode
-                }));
+                ws.send(JSON.stringify({ type: "change_mode", class: currentMode }));
             }
         });
 
@@ -550,7 +460,7 @@
             adaptiveQ = Math.min(q, adaptiveQ)
         });
         sizeSel.addEventListener("change", () => {
-            const [w, h] = (sizeSel.value || "426x240").split("x").map(n => parseInt(n, 10));
+            const [w, h] = (sizeSel.value || "240x426").split("x").map(n => parseInt(n, 10));
             canvas.width = w;
             canvas.height = h;
         });
@@ -568,16 +478,14 @@
 
         btnStart.onclick = start;
         btnReset.onclick = () => {
-            // รีเซ็ตสถิติ + นับเวลาเริ่มใหม่ทันทีถ้ายัง streaming
             if (statReps) statReps.textContent = "0";
             resetTimer();
             if (streaming) startTimer();
         };
 
         function start() {
-            // เริ่มนับเวลาทันที (ไม่ต้องรอ WebSocket)
             if (!streaming) {
-                resetTimer(); // เริ่มรอบใหม่เสมอเมื่อกด Start
+                resetTimer();
                 startTimer();
             }
 
@@ -590,20 +498,14 @@
 
             ws.onopen = () => {
                 setStatus("active", "connected");
-                ws.send(JSON.stringify({
-                    action: "start",
-                    class: currentMode
-                }));
+                ws.send(JSON.stringify({ action: "start", class: currentMode }));
                 streaming = true;
                 targetInterval = 1000 / (parseInt(fpsSel.value, 10) || 12);
                 adaptiveQ = parseFloat(jpgQ.value) || 0.65;
                 startCamera();
                 hbId = setInterval(() => {
                     if (ws && ws.readyState === WebSocket.OPEN) {
-                        ws.send(JSON.stringify({
-                            type: "ping",
-                            t: Date.now()
-                        }))
+                        ws.send(JSON.stringify({ type: "ping", t: Date.now() }))
                     }
                 }, 20000);
             };
@@ -611,11 +513,7 @@
             ws.onmessage = (ev) => {
                 resultPre.textContent = (ev && ev.data) ? ev.data : "";
                 let res;
-                try {
-                    res = JSON.parse(ev.data)
-                } catch {
-                    return
-                }
+                try { res = JSON.parse(ev.data) } catch { return }
                 if (res.status) setStatus(res.status, res.status + (res.message ? `: ${res.message}` : ""));
                 if (Array.isArray(res.feedback) && res.feedback.length)
                     fbDiv.innerHTML = "<ul>" + res.feedback.map(x => `<li>${x}</li>`).join("") + "</ul>";
@@ -625,15 +523,12 @@
                 if (res.img) overlayImg.src = `data:image/jpeg;base64,${res.img}`;
                 else overlayImg.removeAttribute("src");
 
-                // ถ้าเซิร์ฟเวอร์ส่งเวลา ก็จะ “sync” ให้ครั้งเดียว (ไม่บังคับจำเป็น)
                 if (res.metrics) {
                     if (res.metrics.reps != null && statReps) statReps.textContent = res.metrics.reps;
                     if (res.metrics.time_ms != null && Number.isFinite(res.metrics.time_ms)) {
-                        // ซิงก์กับ timer แบบนุ่มนวล
                         baseElapsedMs = res.metrics.time_ms;
                         startEpoch = Date.now();
                     } else if (res.metrics.time_str && !timerId && statTime) {
-                        // fallback: ถ้าไม่ได้เดิน timer ด้วยเหตุผลใด ให้ขึ้นค่าที่ส่งมา
                         statTime.textContent = res.metrics.time_str;
                     }
                 }
@@ -644,11 +539,7 @@
                 streaming = false;
                 stopCamera();
                 cleanupTimers();
-                // หยุดนับ “ชั่วคราว” แต่แสดงค่าค้างไว้
-                stopTimer({
-                    keepDisplay: true
-                });
-                // ลองเชื่อมใหม่อัตโนมัติ
+                stopTimer({ keepDisplay: true });
                 if (!document.hidden) {
                     setTimeout(() => {
                         if (!streaming) start()
@@ -661,45 +552,27 @@
         function stop() {
             streaming = false;
             if (ws && ws.readyState === WebSocket.OPEN) {
-                try {
-                    ws.send(JSON.stringify({
-                        action: "stop"
-                    }))
-                } catch {}
+                try { ws.send(JSON.stringify({ action: "stop" })) } catch {}
             }
             cleanupWS();
             stopCamera();
             cleanupTimers();
-            // หยุดนับและรีเซ็ตหน้าจอ
-            stopTimer({
-                keepDisplay: true
-            });
+            stopTimer({ keepDisplay: true });
             setStatus("waiting", "disconnected");
         }
 
         function cleanupWS() {
-            try {
-                if (ws) ws.close()
-            } catch {}
+            try { if (ws) ws.close() } catch {}
             ws = null
         }
 
         function cleanupTimers() {
-            if (hbId) {
-                clearInterval(hbId);
-                hbId = null
-            }
-            if (rafId) {
-                cancelAnimationFrame(rafId);
-                rafId = null
-            }
+            if (hbId) { clearInterval(hbId); hbId = null }
+            if (rafId) { cancelAnimationFrame(rafId); rafId = null }
         }
 
         function pauseSending() {
-            if (rafId) {
-                cancelAnimationFrame(rafId);
-                rafId = null
-            }
+            if (rafId) { cancelAnimationFrame(rafId); rafId = null }
         }
 
         function resumeSending() {
@@ -711,20 +584,13 @@
 
         async function startCamera() {
             try {
+                // ขอวิดีโอแนวตั้ง 540x960
                 const constraints = {
                     video: {
-                        facingMode: {
-                            ideal: facing
-                        },
-                        width: {
-                            ideal: 960
-                        },
-                        height: {
-                            ideal: 540
-                        },
-                        frameRate: {
-                            ideal: parseInt(fpsSel.value, 10) || 12
-                        }
+                        facingMode: { ideal: facing },
+                        width:  { ideal: 540 },
+                        height: { ideal: 960 },
+                        frameRate: { ideal: parseInt(fpsSel.value, 10) || 12 }
                     },
                     audio: false
                 };
@@ -732,10 +598,7 @@
                 attachStream(stream);
             } catch (err) {
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: true,
-                        audio: false
-                    });
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
                     attachStream(stream)
                 } catch (e) {
                     setStatus("error", "camera blocked");
@@ -753,7 +616,7 @@
             currentStream = stream;
             video.srcObject = stream;
             video.onloadedmetadata = () => {
-                const [w, h] = (sizeSel.value || "426x240").split("x").map(n => parseInt(n, 10));
+                const [w, h] = (sizeSel.value || "240x426").split("x").map(n => parseInt(n, 10));
                 canvas.width = w;
                 canvas.height = h;
                 lastSend = performance.now();
@@ -798,10 +661,7 @@
                 const dataUrl = canvas.toDataURL("image/jpeg", adaptiveQ);
                 const b64 = dataUrl.split(",")[1];
                 if (ws && ws.readyState === WebSocket.OPEN)
-                    ws.send(JSON.stringify({
-                        type: "frame",
-                        image: b64
-                    }));
+                    ws.send(JSON.stringify({ type: "frame", image: b64 }));
             } catch (e) {} finally {
                 sendingNow = false
             }
@@ -811,5 +671,4 @@
     </script>
 
 </body>
-
 </html>
