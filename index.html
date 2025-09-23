@@ -1,321 +1,815 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SkillSnap – Live Training</title>
-
-  <!-- (ทางเลือก) เปิดให้เชื่อมต่อไปยัง ngrok ได้ หากคุณตั้ง CSP ในที่อื่นไว้เข้มงวด
-       ใส่ไว้ไม่เสียหาย: -->
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' https: data: blob:;
-                 connect-src 'self' https://*.ngrok-free.app wss://*.ngrok-free.app https://*.netlify.app;
-                 img-src 'self' data: blob: https:;
-                 media-src 'self' blob: https:;">
-
-  <style>
-    :root{--bg:#f6f1eb;--panel:#fff;--muted:#e9e4de;--ink:#2b2320;--brand:#ff6b2c;--brand-2:#ff864f;--ok:#78d2a3;--warn:#e9d66b;--err:#ff7a7a;--card-radius:16px;--shadow:0 6px 20px rgba(0,0,0,.06)}
-    *{box-sizing:border-box}html,body{height:100%}
-    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-    .container{padding:20px;max-width:1200px;margin:0 auto}
-    .grid-top{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:18px}
-    .card{background:var(--panel);border-radius:var(--card-radius);box-shadow:var(--shadow);padding:18px}
-    .card h3{margin:0 0 12px;font-weight:700}
-    .stat{display:flex;justify-content:space-between;align-items:center;margin:10px 0;padding:10px;border:1px solid var(--muted);border-radius:12px;background:#fffaf7}
-    .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid var(--muted);background:#fff}
-    .pill{padding:6px 10px;border-radius:10px;background:#fff0e8;border:1px solid #ffd7c3}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer}
-    .btn:disabled{opacity:.6;cursor:not-allowed}
-    .btn-primary{background:linear-gradient(180deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 8px 20px rgba(255,107,44,.25)}
-    .btn-ghost{background:#f1eee9;border:1px solid var(--muted);color:#4c3f3a}
-    .drills{display:flex;flex-direction:column;gap:10px}
-    .drill{padding:10px 12px;border-radius:12px;border:1px solid var(--muted);background:#f6f3ef;cursor:pointer;text-align:left}
-    .drill.active{background:linear-gradient(180deg,#ffe2d6,#ffd3bf);border-color:#ffc5ae}
-    .live{margin-top:20px}
-    .live h3{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-    .panel-live{background:#e7dfd8;border:1px solid #d6cdc6;border-radius:18px;padding:14px}
-    .cam-wrap{position:relative;width:100%;max-width:100%;margin:0 auto;border-radius:14px;overflow:hidden;background:#d8cfc8}
-    .cam-aspect{position:relative;width:100%;padding-top:56.25%}
-    .cam-aspect>*{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
-    .overlay{position:absolute;inset:0;pointer-events:none}
-    .status{display:inline-flex;align-items:center;gap:8px;margin-left:8px}
-    .dot{width:10px;height:10px;border-radius:50%}
-    .waiting .dot{background:var(--warn)} .active .dot{background:var(--ok)}
-    .finished .dot{background:#7aa7ff} .error .dot{background:var(--err)}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .hint{font-size:12px;opacity:.75}
-    .kbd{padding:2px 6px;border:1px solid #ccbfb6;border-radius:6px;background:#fff;font-family:ui-monospace,Menlo,Consolas,monospace}
-    .controls{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px;pointer-events:auto}
-    .controls>*{height:48px}.controls .span-2{grid-column:1 / -1}
-    .controls .btn,.controls .btn-field{width:100%}
-    .btn-field{display:inline-flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:12px;background:#f1eee9;border:1px solid var(--muted);color:#4c3f3a;font-weight:600;width:100%;pointer-events:auto}
-    .btn-field label{font-size:12px;opacity:.8;margin-right:6px;white-space:nowrap}
-    .btn-field input,.btn-field select{border:none;background:transparent;outline:none;font:inherit;color:inherit;font-weight:700;padding:4px 6px;min-width:72px;text-align:right;appearance:none}
-    .btn-field input[type="number"]{width:88px}
-    .btn-field .select-wrap{position:relative;flex:1;display:flex;justify-content:flex-end}
-    .btn-field .select-wrap::after{content:"▾";position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.6}
-    .btn-field select{padding-right:18px;max-width:100%}
-    @media (max-width:1024px){.grid-top{grid-template-columns:1fr}.controls{grid-template-columns:1fr}}
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SkillSnap – Live Training</title>
+    <style>
+         :root {
+            --bg: #f6f1eb;
+            --panel: #fff;
+            --muted: #e9e4de;
+            --ink: #2b2320;
+            --brand: #ff6b2c;
+            --brand-2: #ff864f;
+            --ok: #78d2a3;
+            --warn: #e9d66b;
+            --err: #ff7a7a;
+            --card-radius: 16px;
+            --shadow: 0 6px 20px rgba(0, 0, 0, .06)
+        }
+        
+        * {
+            box-sizing: border-box
+        }
+        
+        html,
+        body {
+            height: 100%
+        }
+        
+        body {
+            margin: 0;
+            font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink)
+        }
+        
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto
+        }
+        
+        .grid-top {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr 1fr;
+            gap: 18px
+        }
+        
+        .card {
+            background: var(--panel);
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow);
+            padding: 18px
+        }
+        
+        .card h3 {
+            margin: 0 0 12px;
+            font-weight: 700
+        }
+        
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid var(--muted);
+            border-radius: 12px;
+            background: #fffaf7
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            border: 1px solid var(--muted);
+            background: #fff
+        }
+        
+        .pill {
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: #fff0e8;
+            border: 1px solid #ffd7c3
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-weight: 700;
+            cursor: pointer
+        }
+        
+        .btn:disabled {
+            opacity: .6;
+            cursor: not-allowed
+        }
+        
+        .btn-primary {
+            background: linear-gradient(180deg, var(--brand), var(--brand-2));
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(255, 107, 44, .25)
+        }
+        
+        .btn-ghost {
+            background: #f1eee9;
+            border: 1px solid var(--muted);
+            color: #4c3f3a
+        }
+        
+        .drills {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+        
+        .drill {
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--muted);
+            background: #f6f3ef;
+            cursor: pointer;
+            text-align: left
+        }
+        
+        .drill.active {
+            background: linear-gradient(180deg, #ffe2d6, #ffd3bf);
+            border-color: #ffc5ae
+        }
+        
+        .live {
+            margin-top: 20px
+        }
+        
+        .live h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px
+        }
+        
+        .panel-live {
+            background: #e7dfd8;
+            border: 1px solid #d6cdc6;
+            border-radius: 18px;
+            padding: 14px
+        }
+        
+        .cam-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #d8cfc8
+        }
+        
+        .cam-aspect {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%
+        }
+        
+        .cam-aspect>* {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000
+        }
+        
+        .overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none
+        }
+        
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 8px
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%
+        }
+        
+        .waiting .dot {
+            background: var(--warn)
+        }
+        
+        .active .dot {
+            background: var(--ok)
+        }
+        
+        .finished .dot {
+            background: #7aa7ff
+        }
+        
+        .error .dot {
+            background: var(--err)
+        }
+        
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+        
+        .hint {
+            font-size: 12px;
+            opacity: .75
+        }
+        
+        .kbd {
+            padding: 2px 6px;
+            border: 1px solid #ccbfb6;
+            border-radius: 6px;
+            background: #fff;
+            font-family: ui-monospace, Menlo, Consolas, monospace
+        }
+        /* === ปุ่ม-อินพุตหน้าตาเหมือนปุ่ม Ghost + Grid ให้บาลานซ์ === */
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+            gap: 12px;
+            pointer-events: auto;
+        }
+        
+        .controls>* {
+            height: 48px
+        }
+        
+        .controls .span-2 {
+            grid-column: 1 / -1
+        }
+        
+        .controls .btn,
+        .controls .btn-field {
+            width: 100%
+        }
+        
+        .btn-field {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: #f1eee9;
+            border: 1px solid var(--muted);
+            color: #4c3f3a;
+            font-weight: 600;
+            width: 100%;
+            pointer-events: auto;
+        }
+        
+        .btn-field label {
+            font-size: 12px;
+            opacity: .8;
+            margin-right: 6px;
+            white-space: nowrap
+        }
+        
+        .btn-field input,
+        .btn-field select {
+            border: none;
+            background: transparent;
+            outline: none;
+            font: inherit;
+            color: inherit;
+            font-weight: 700;
+            padding: 4px 6px;
+            min-width: 72px;
+            text-align: right;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .btn-field input[type="number"] {
+            width: 88px
+        }
+        
+        .btn-field .select-wrap {
+            position: relative;
+            flex: 1;
+            display: flex;
+            justify-content: flex-end
+        }
+        
+        .btn-field .select-wrap::after {
+            content: "▾";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            opacity: .6
+        }
+        
+        .btn-field select {
+            padding-right: 18px;
+            max-width: 100%
+        }
+        
+        @media (max-width:1024px) {
+            .grid-top {
+                grid-template-columns: 1fr
+            }
+            .controls {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
-    <header class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h2 style="margin:0">SkillSnap Live Training
-        <span id="status" class="status waiting"><span class="dot"></span><span id="statusText">disconnected</span></span>
-      </h2>
-      <div class="badge">Session: <span id="sessionId"></span></div>
-    </header>
+    <div class="container">
+        <header class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h2 style="margin:0">SkillSnap Live Training
+                <span id="status" class="status waiting"><span class="dot"></span><span id="statusText">disconnected</span></span>
+            </h2>
+            <div class="badge">Session: <span id="sessionId"></span></div>
+        </header>
 
-    <section class="grid-top">
-      <!-- Session Stats -->
-      <div class="card">
-        <h3>🏆 Session Stats</h3>
-        <div class="stat"><span>Session Time</span><strong id="statTime">0:00</strong></div>
-        <div class="stat"><span>Current Drill</span><span class="pill" id="statDrill">Dribbling</span></div>
-      </div>
-
-      <!-- Camera Control -->
-      <div class="card">
-        <h3>📷 Camera Control</h3>
-        <div class="controls" style="margin-top:8px">
-          <button type="button" class="btn btn-primary" id="btnStart">▶ Start Training</button>
-          <button type="button" class="btn btn-ghost" id="btnReset">↻ Reset Session</button>
-
-          <div class="btn-field">
-            <label for="fpsSel">FPS</label>
-            <div class="select-wrap">
-              <select id="fpsSel"><option>8</option><option selected>12</option><option>15</option><option>20</option></select>
+        <section class="grid-top">
+            <!-- Session Stats -->
+            <div class="card">
+                <h3>🏆 Session Stats</h3>
+                <div class="stat"><span>Session Time</span><strong id="statTime">0:00</strong></div>
+                <div class="stat"><span>Current Drill</span><span class="pill" id="statDrill">Dribbling</span></div>
             </div>
-          </div>
 
-          <div class="btn-field">
-            <label for="jpgQ">JPEG q</label>
-            <input id="jpgQ" type="number" value="0.65" min="0.25" max="0.9" step="0.05" />
-          </div>
+            <!-- Camera Control -->
+            <div class="card">
+                <h3>📷 Camera Control</h3>
 
-          <div class="btn-field span-2">
-            <label for="sizeSel">Resize</label>
-            <div class="select-wrap" style="max-width:320px">
-              <select id="sizeSel">
+                <!-- Grid 2 คอลัมน์ ให้บาลานซ์ + ใส่ id/ type ให้ปุ่ม -->
+                <div class="controls" style="margin-top:8px">
+                    <button type="button" class="btn btn-primary" id="btnStart">▶ Start Training</button>
+                    <button type="button" class="btn btn-ghost" id="btnReset">↻ Reset Session</button>
+
+                    <div class="btn-field">
+                        <label for="fpsSel">FPS</label>
+                        <div class="select-wrap">
+                            <select id="fpsSel">
+                <option>8</option><option selected>12</option><option>15</option><option>20</option>
+              </select>
+                        </div>
+                    </div>
+
+                    <div class="btn-field">
+                        <label for="jpgQ">JPEG q</label>
+                        <input id="jpgQ" type="number" value="0.65" min="0.25" max="0.9" step="0.05" />
+                    </div>
+
+                    <div class="btn-field span-2">
+                        <label for="sizeSel">Resize</label>
+                        <div class="select-wrap" style="max-width:320px">
+                            <select id="sizeSel">
                 <option value="320x240">320×240</option>
                 <option value="426x240" selected>426×240</option>
                 <option value="640x360">640×360</option>
                 <option value="960x540">960×540 (HQ)</option>
                 <option value="1280x720">1280×720 (HD)</option>
               </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hint" style="margin-top:8px">Press <span class="kbd">D</span> to flip camera</div>
             </div>
-          </div>
-        </div>
-        <div class="hint" style="margin-top:8px">Press <span class="kbd">D</span> to flip camera</div>
-      </div>
 
-      <!-- Training Drills -->
-      <div class="card">
-        <h3>◎ Training Drills</h3>
-        <div class="drills" id="drillList">
-          <button type="button" class="drill active" data-mode="dribble">1. Dribbling</button>
-          <button type="button" class="drill" data-mode="pass">2. Passing</button>
-          <button type="button" class="drill" data-mode="defenses">3. Defensive Stance</button>
-          <button type="button" class="drill" data-mode="shooting">4. Shooting</button>
-          <button type="button" class="drill" data-mode="rebound">5. Rebounding</button>
-        </div>
-      </div>
-    </section>
+            <!-- Training Drills -->
+            <div class="card">
+                <h3>◎ Training Drills</h3>
+                <div class="drills" id="drillList">
+                    <button type="button" class="drill active" data-mode="dribble">1. Dribbling</button>
+                    <button type="button" class="drill" data-mode="pass">2. Passing</button>
+                    <button type="button" class="drill" data-mode="defenses">3. Defensive Stance</button>
+                    <button type="button" class="drill" data-mode="shooting">4. Shooting</button>
+                    <button type="button" class="drill" data-mode="rebound">5. Rebounding</button>
+                </div>
+            </div>
+        </section>
 
-    <!-- Live Analysis -->
-    <section class="live">
-      <h3>∿ Live Training Analysis</h3>
-      <div class="panel-live">
-        <div class="cam-wrap">
-          <div class="cam-aspect">
-            <video id="cam" autoplay muted playsinline></video>
-            <img id="overlayImg" class="overlay" alt="overlay" />
-          </div>
-        </div>
-        <div class="hint" style="text-align:center;margin-top:10px">
-          Start training to begin camera analysis • Point camera at the hoop for best results
-        </div>
-      </div>
+        <!-- Live Analysis -->
+        <section class="live">
+            <h3>∿ Live Training Analysis</h3>
+            <div class="panel-live">
+                <div class="cam-wrap">
+                    <div class="cam-aspect">
+                        <video id="cam" autoplay muted playsinline></video>
+                        <img id="overlayImg" class="overlay" alt="overlay" />
+                    </div>
+                </div>
+                <div class="hint" style="text-align:center;margin-top:10px">
+                    Start training to begin camera analysis • Point camera at the hoop for best results
+                </div>
+            </div>
 
-      <div class="card" style="margin-top:14px">
-        <h3>Feedback</h3>
-        <div id="feedback"></div>
-        <h3 style="margin-top:14px">Raw JSON</h3>
-        <pre id="result" style="white-space:pre-wrap;background:#f3efe9;padding:10px;border-radius:10px;max-height:280px;overflow:auto"></pre>
-      </div>
-    </section>
-  </div>
+            <div class="card" style="margin-top:14px">
+                <h3>Feedback</h3>
+                <div id="feedback"></div>
+                <h3 style="margin-top:14px">Raw JSON</h3>
+                <pre id="result" style="white-space:pre-wrap;background:#f3efe9;padding:10px;border-radius:10px;max-height:280px;overflow:auto"></pre>
+            </div>
+        </section>
+    </div>
 
-  <script>
-    // ====== CONFIG (แก้แค่ตัวแปรนี้ให้เป็นลิงก์ ngrok ปัจจุบัน) ======
-    // ใส่เป็น https://<subdomain>.ngrok-free.app    (ห้ามใส่ path ต่อท้าย)
-    const BACKEND_BASE =
-      new URLSearchParams(location.search).get("backend")
-      || "https://22071bb26035.ngrok-free.app";   // <-- แก้ให้ตรงของคุณ
+    <script>
+        // ====== CONFIG ======
+        const NGROK_PUBLIC = "https://8150e91c1b34.ngrok-free.app";
+        const WS_BASE = NGROK_PUBLIC ? NGROK_PUBLIC.replace(/^http/i, "ws") :
+            (location.protocol === "https:" ? "wss://" : "ws://") + (location.host || "localhost:8000");
+        const WS_URL = (sessionId) => `${WS_BASE}/ws/${sessionId}`;
+        // ====================
 
-    // สร้าง URL WebSocket ที่ถูกต้องเสมอ (https -> wss, http -> ws) และตัด path ทิ้ง
-    function wsUrl(sessionId) {
-      try {
-        const u = new URL(BACKEND_BASE);
-        const wsProto = (u.protocol === "https:") ? "wss:" : "ws:";
-        return `${wsProto}//${u.host}/ws/${encodeURIComponent(sessionId)}`;
-      } catch (e) {
-        // fallback ใช้ origin ปัจจุบัน (ช่วยตอน dev)
-        const isHttps = location.protocol === "https:";
-        return `${isHttps ? "wss" : "ws"}://${location.host}/ws/${encodeURIComponent(sessionId)}`;
-      }
-    }
-    // ================================================================
+        const $ = (id) => document.getElementById(id);
+        const statusBox = $("status"),
+            statusText = $("statusText"),
+            sessionBadge = $("sessionId");
 
-    const $ = (id) => document.getElementById(id);
-    const statusBox = $("status"), statusText = $("statusText"), sessionBadge = $("sessionId");
+        const btnStart = $("btnStart");
+        const btnReset = $("btnReset");
+        const fpsSel = $("fpsSel");
+        const jpgQ = $("jpgQ");
+        const sizeSel = $("sizeSel");
+        const video = $("cam");
+        const overlayImg = $("overlayImg");
+        const fbDiv = $("feedback");
+        const resultPre = $("result");
+        const drillList = $("drillList");
+        const statReps = $("statReps"); // อาจไม่มีในหน้า — โอเค ไม่เป็นไร
+        const statTime = $("statTime");
+        const statDrill = $("statDrill");
 
-    const btnStart = $("btnStart");
-    const btnReset = $("btnReset");
-    const fpsSel = $("fpsSel");
-    const jpgQ = $("jpgQ");
-    const sizeSel = $("sizeSel");
-    const video = $("cam");
-    const overlayImg = $("overlayImg");
-    const fbDiv = $("feedback");
-    const resultPre = $("result");
-    const drillList = $("drillList");
-    const statReps = $("statReps"); // optional
-    const statTime = $("statTime");
-    const statDrill = $("statDrill");
+        let currentMode = "dribble";
+        let ws = null,
+            streaming = false,
+            hbId = null,
+            rafId = null,
+            sendingNow = false;
+        let session_id = "user_" + Math.floor(Math.random() * 1e6);
+        sessionBadge.textContent = session_id;
 
-    let currentMode = "dribble";
-    let ws = null, streaming = false, hbId = null, rafId = null, sendingNow = false;
-    let session_id = "user_" + Math.floor(Math.random() * 1e6);
-    sessionBadge.textContent = session_id;
+        // ====== LOCAL TIMER ======
+        let timerId = null; // setInterval handle
+        let baseElapsedMs = 0; // เวลาสะสมก่อนหน้า (เช่น หลัง pause/reconnect)
+        let startEpoch = null; // เวลาเริ่มรอบปัจจุบัน (Date.now())
 
-    // ====== LOCAL TIMER ======
-    let timerId = null, baseElapsedMs = 0, startEpoch = null;
-    const formatMMSS = (ms)=>{const t=Math.floor(ms/1000),m=Math.floor(t/60),s=t%60;return `${m}:${s.toString().padStart(2,"0")}`};
-    function startTimer(){ if(!statTime) return; if(timerId) clearInterval(timerId); startEpoch=Date.now();
-      timerId=setInterval(()=>{ const elapsed=baseElapsedMs+(Date.now()-startEpoch); statTime.textContent=formatMMSS(elapsed); },250); }
-    function stopTimer({keepDisplay=true}={}){ if(timerId){clearInterval(timerId);timerId=null;} if(startEpoch){baseElapsedMs+=(Date.now()-startEpoch);startEpoch=null;} if(!keepDisplay&&statTime) statTime.textContent="0:00";}
-    function resetTimer(){ if(timerId){clearInterval(timerId);timerId=null;} baseElapsedMs=0; startEpoch=null; if(statTime) statTime.textContent="0:00"; }
-    // =========================
-
-    const canvas=document.createElement("canvas");
-    const ctx=canvas.getContext("2d",{alpha:false,desynchronized:true});
-    let lastSend=0, targetInterval=1000/12, adaptiveQ=0.65, consecSkips=0;
-    let currentStream=null, facing="user";
-
-    function setStatus(state,text){ statusBox.classList.remove("waiting","active","finished","error"); statusBox.classList.add(state); statusText.textContent=text||state; }
-
-    // Drill picker
-    drillList.addEventListener("click",(e)=>{
-      const btn=e.target.closest(".drill"); if(!btn) return;
-      [...drillList.children].forEach(b=>b.classList.toggle("active",b===btn));
-      currentMode=btn.getAttribute("data-mode");
-      if(statDrill) statDrill.textContent=btn.textContent.replace(/^\d+\.\s*/,"");
-      if(ws && ws.readyState===WebSocket.OPEN){
-        ws.send(JSON.stringify({type:"change_mode", class:currentMode}));
-      }
-    });
-
-    fpsSel.addEventListener("change",()=>{ targetInterval=1000/(parseInt(fpsSel.value,10)||12) });
-    jpgQ.addEventListener("change",()=>{ const q=parseFloat(jpgQ.value)||0.65; adaptiveQ=Math.min(q,adaptiveQ) });
-    sizeSel.addEventListener("change",()=>{ const [w,h]=(sizeSel.value||"426x240").split("x").map(n=>parseInt(n,10)); canvas.width=w; canvas.height=h; });
-
-    window.addEventListener("keydown",(e)=>{ if(e.key.toLowerCase()==="d"){ facing=(facing==="user")?"environment":"user"; if(streaming) restartCamera(); }});
-    document.addEventListener("visibilitychange",()=>{ document.hidden?pauseSending():resumeSending() });
-    window.addEventListener("beforeunload",()=>stop());
-
-    btnStart.onclick = start;
-    btnReset.onclick = ()=>{ if(statReps) statReps.textContent="0"; resetTimer(); if(streaming) startTimer(); };
-
-    function start(){
-      if(!streaming){ resetTimer(); startTimer(); }
-      cleanupWS(); fbDiv.innerHTML=""; resultPre.textContent=""; overlayImg.removeAttribute("src");
-      setStatus("waiting","connecting…");
-
-      ws = new WebSocket(wsUrl(session_id));   // <<<<<< ใช้ตัวสร้าง URL ใหม่
-
-      ws.onopen = ()=>{
-        setStatus("active","connected");
-        ws.send(JSON.stringify({action:"start", class:currentMode}));
-        streaming=true;
-        targetInterval=1000/(parseInt(fpsSel.value,10)||12);
-        adaptiveQ=parseFloat(jpgQ.value)||0.65;
-        startCamera();
-        hbId=setInterval(()=>{ if(ws && ws.readyState===WebSocket.OPEN){ ws.send(JSON.stringify({type:"ping", t:Date.now()})) }}, 20000);
-      };
-
-      ws.onmessage = (ev)=>{
-        resultPre.textContent = (ev && ev.data) ? ev.data : "";
-        let res; try{ res=JSON.parse(ev.data) }catch{ return }
-        if(res.status) setStatus(res.status, res.status + (res.message?`: ${res.message}`:""));
-        if(Array.isArray(res.feedback)&&res.feedback.length) fbDiv.innerHTML="<ul>"+res.feedback.map(x=>`<li>${x}</li>`).join("")+"</ul>";
-        else if(res.message) fbDiv.textContent=res.message; else fbDiv.textContent="";
-
-        if(res.img) overlayImg.src=`data:image/jpeg;base64,${res.img}`; else overlayImg.removeAttribute("src");
-
-        if(res.metrics){
-          if(res.metrics.reps!=null && statReps) statReps.textContent=res.metrics.reps;
-          if(res.metrics.time_ms!=null && Number.isFinite(res.metrics.time_ms)){ baseElapsedMs=res.metrics.time_ms; startEpoch=Date.now(); }
-          else if(res.metrics.time_str && !timerId && statTime){ statTime.textContent=res.metrics.time_str; }
+        function formatMMSS(ms) {
+            const total = Math.floor(ms / 1000);
+            const m = Math.floor(total / 60);
+            const s = total % 60;
+            return `${m}:${s.toString().padStart(2, "0")}`;
         }
-      };
 
-      ws.onclose = ()=>{
-        setStatus("waiting","disconnected"); streaming=false; stopCamera(); cleanupTimers();
-        stopTimer({keepDisplay:true});
-        if(!document.hidden){ setTimeout(()=>{ if(!streaming) start() }, 1200); }
-      };
-      ws.onerror = ()=> setStatus("error","ws error");
-    }
+        function startTimer() {
+            if (!statTime) return;
+            if (timerId) clearInterval(timerId);
+            startEpoch = Date.now();
+            timerId = setInterval(() => {
+                const elapsed = baseElapsedMs + (Date.now() - startEpoch);
+                statTime.textContent = formatMMSS(elapsed);
+            }, 250);
+        }
 
-    function stop(){
-      streaming=false;
-      if(ws && ws.readyState===WebSocket.OPEN){ try{ ws.send(JSON.stringify({action:"stop"})) }catch{} }
-      cleanupWS(); stopCamera(); cleanupTimers(); stopTimer({keepDisplay:true}); setStatus("waiting","disconnected");
-    }
+        function stopTimer({
+            keepDisplay = true
+        } = {}) {
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+            }
+            if (startEpoch) {
+                baseElapsedMs += (Date.now() - startEpoch);
+                startEpoch = null;
+            }
+            if (!keepDisplay && statTime) statTime.textContent = "0:00";
+        }
 
-    function cleanupWS(){ try{ if(ws) ws.close() }catch{} ws=null }
-    function cleanupTimers(){ if(hbId){clearInterval(hbId);hbId=null} if(rafId){cancelAnimationFrame(rafId);rafId=null} }
-    function pauseSending(){ if(rafId){cancelAnimationFrame(rafId);rafId=null} }
-    function resumeSending(){ if(!rafId && streaming){ lastSend=performance.now(); loop() } }
+        function resetTimer() {
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+            }
+            baseElapsedMs = 0;
+            startEpoch = null;
+            if (statTime) statTime.textContent = "0:00";
+        }
+        // =========================
 
-    async function startCamera(){
-      try{
-        const constraints={ video:{ facingMode:{ideal:facing}, width:{ideal:960}, height:{ideal:540}, frameRate:{ideal:parseInt(fpsSel.value,10)||12} }, audio:false };
-        const stream=await navigator.mediaDevices.getUserMedia(constraints); attachStream(stream);
-      }catch(err){
-        try{ const stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false}); attachStream(stream) }
-        catch(e){ setStatus("error","camera blocked"); console.error(e) }
-      }
-    }
-    function restartCamera(){ stopCamera(); startCamera() }
-    function attachStream(stream){ currentStream=stream; video.srcObject=stream; video.onloadedmetadata=()=>{ const [w,h]=(sizeSel.value||"426x240").split("x").map(n=>parseInt(n,10)); canvas.width=w; canvas.height=h; lastSend=performance.now(); loop(); }; }
-    function stopCamera(){ if(currentStream){ currentStream.getTracks().forEach(t=>t.stop()); currentStream=null } video.srcObject=null }
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d", {
+            alpha: false,
+            desynchronized: true
+        });
 
-    function loop(now=performance.now()){
-      if(!streaming || !ws || ws.readyState!==WebSocket.OPEN) return;
-      const needSend=(now-lastSend)>=targetInterval;
-      if(needSend && !sendingNow){ lastSend=now; sendOneFrame() }
-      rafId=requestAnimationFrame(loop);
-    }
+        let lastSend = 0,
+            targetInterval = 1000 / 12,
+            adaptiveQ = 0.65,
+            consecSkips = 0;
+        let currentStream = null,
+            facing = "user";
 
-    function sendOneFrame(){
-      sendingNow=true;
-      const qMax=parseFloat(jpgQ.value)||0.65;
-      adaptiveQ=Math.max(0.25, Math.min(qMax, adaptiveQ));
-      try{ ctx.drawImage(video,0,0,canvas.width,canvas.height) }catch(e){ sendingNow=false; return }
-      if(ws && ws.bufferedAmount>1000000){ adaptiveQ=Math.max(0.25, adaptiveQ-0.05) } else { adaptiveQ=Math.min(qMax, adaptiveQ+0.015) }
-      try{
-        const dataUrl=canvas.toDataURL("image/jpeg",adaptiveQ);
-        const b64=dataUrl.split(",")[1];
-        if(ws && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:"frame", image:b64}));
-      }catch(e){} finally { sendingNow=false }
-    }
+        function setStatus(state, text) {
+            statusBox.classList.remove("waiting", "active", "finished", "error");
+            statusBox.classList.add(state);
+            statusText.textContent = text || state;
+        }
 
-    setStatus("waiting","disconnected");
-  </script>
+        // Drill picker
+        drillList.addEventListener("click", (e) => {
+            const btn = e.target.closest(".drill");
+            if (!btn) return;
+            [...drillList.children].forEach(b => b.classList.toggle("active", b === btn));
+            currentMode = btn.getAttribute("data-mode");
+            if (statDrill) statDrill.textContent = btn.textContent.replace(/^\d+\.\s*/, "");
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: "change_mode",
+                    class: currentMode
+                }));
+            }
+        });
+
+        fpsSel.addEventListener("change", () => {
+            targetInterval = 1000 / (parseInt(fpsSel.value, 10) || 12)
+        });
+        jpgQ.addEventListener("change", () => {
+            const q = parseFloat(jpgQ.value) || 0.65;
+            adaptiveQ = Math.min(q, adaptiveQ)
+        });
+        sizeSel.addEventListener("change", () => {
+            const [w, h] = (sizeSel.value || "426x240").split("x").map(n => parseInt(n, 10));
+            canvas.width = w;
+            canvas.height = h;
+        });
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key.toLowerCase() === "d") {
+                facing = (facing === "user") ? "environment" : "user";
+                if (streaming) restartCamera()
+            }
+        });
+        document.addEventListener("visibilitychange", () => {
+            document.hidden ? pauseSending() : resumeSending()
+        });
+        window.addEventListener("beforeunload", () => stop());
+
+        btnStart.onclick = start;
+        btnReset.onclick = () => {
+            // รีเซ็ตสถิติ + นับเวลาเริ่มใหม่ทันทีถ้ายัง streaming
+            if (statReps) statReps.textContent = "0";
+            resetTimer();
+            if (streaming) startTimer();
+        };
+
+        function start() {
+            // เริ่มนับเวลาทันที (ไม่ต้องรอ WebSocket)
+            if (!streaming) {
+                resetTimer(); // เริ่มรอบใหม่เสมอเมื่อกด Start
+                startTimer();
+            }
+
+            cleanupWS();
+            fbDiv.innerHTML = "";
+            resultPre.textContent = "";
+            overlayImg.removeAttribute("src");
+            setStatus("waiting", "connecting…");
+            ws = new WebSocket(WS_URL(session_id));
+
+            ws.onopen = () => {
+                setStatus("active", "connected");
+                ws.send(JSON.stringify({
+                    action: "start",
+                    class: currentMode
+                }));
+                streaming = true;
+                targetInterval = 1000 / (parseInt(fpsSel.value, 10) || 12);
+                adaptiveQ = parseFloat(jpgQ.value) || 0.65;
+                startCamera();
+                hbId = setInterval(() => {
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({
+                            type: "ping",
+                            t: Date.now()
+                        }))
+                    }
+                }, 20000);
+            };
+
+            ws.onmessage = (ev) => {
+                resultPre.textContent = (ev && ev.data) ? ev.data : "";
+                let res;
+                try {
+                    res = JSON.parse(ev.data)
+                } catch {
+                    return
+                }
+                if (res.status) setStatus(res.status, res.status + (res.message ? `: ${res.message}` : ""));
+                if (Array.isArray(res.feedback) && res.feedback.length)
+                    fbDiv.innerHTML = "<ul>" + res.feedback.map(x => `<li>${x}</li>`).join("") + "</ul>";
+                else if (res.message) fbDiv.textContent = res.message;
+                else fbDiv.textContent = "";
+
+                if (res.img) overlayImg.src = `data:image/jpeg;base64,${res.img}`;
+                else overlayImg.removeAttribute("src");
+
+                // ถ้าเซิร์ฟเวอร์ส่งเวลา ก็จะ “sync” ให้ครั้งเดียว (ไม่บังคับจำเป็น)
+                if (res.metrics) {
+                    if (res.metrics.reps != null && statReps) statReps.textContent = res.metrics.reps;
+                    if (res.metrics.time_ms != null && Number.isFinite(res.metrics.time_ms)) {
+                        // ซิงก์กับ timer แบบนุ่มนวล
+                        baseElapsedMs = res.metrics.time_ms;
+                        startEpoch = Date.now();
+                    } else if (res.metrics.time_str && !timerId && statTime) {
+                        // fallback: ถ้าไม่ได้เดิน timer ด้วยเหตุผลใด ให้ขึ้นค่าที่ส่งมา
+                        statTime.textContent = res.metrics.time_str;
+                    }
+                }
+            };
+
+            ws.onclose = () => {
+                setStatus("waiting", "disconnected");
+                streaming = false;
+                stopCamera();
+                cleanupTimers();
+                // หยุดนับ “ชั่วคราว” แต่แสดงค่าค้างไว้
+                stopTimer({
+                    keepDisplay: true
+                });
+                // ลองเชื่อมใหม่อัตโนมัติ
+                if (!document.hidden) {
+                    setTimeout(() => {
+                        if (!streaming) start()
+                    }, 1200);
+                }
+            };
+            ws.onerror = () => setStatus("error", "ws error");
+        }
+
+        function stop() {
+            streaming = false;
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                try {
+                    ws.send(JSON.stringify({
+                        action: "stop"
+                    }))
+                } catch {}
+            }
+            cleanupWS();
+            stopCamera();
+            cleanupTimers();
+            // หยุดนับและรีเซ็ตหน้าจอ
+            stopTimer({
+                keepDisplay: true
+            });
+            setStatus("waiting", "disconnected");
+        }
+
+        function cleanupWS() {
+            try {
+                if (ws) ws.close()
+            } catch {}
+            ws = null
+        }
+
+        function cleanupTimers() {
+            if (hbId) {
+                clearInterval(hbId);
+                hbId = null
+            }
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null
+            }
+        }
+
+        function pauseSending() {
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null
+            }
+        }
+
+        function resumeSending() {
+            if (!rafId && streaming) {
+                lastSend = performance.now();
+                loop()
+            }
+        }
+
+        async function startCamera() {
+            try {
+                const constraints = {
+                    video: {
+                        facingMode: {
+                            ideal: facing
+                        },
+                        width: {
+                            ideal: 960
+                        },
+                        height: {
+                            ideal: 540
+                        },
+                        frameRate: {
+                            ideal: parseInt(fpsSel.value, 10) || 12
+                        }
+                    },
+                    audio: false
+                };
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                attachStream(stream);
+            } catch (err) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: true,
+                        audio: false
+                    });
+                    attachStream(stream)
+                } catch (e) {
+                    setStatus("error", "camera blocked");
+                    console.error(e)
+                }
+            }
+        }
+
+        function restartCamera() {
+            stopCamera();
+            startCamera()
+        }
+
+        function attachStream(stream) {
+            currentStream = stream;
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                const [w, h] = (sizeSel.value || "426x240").split("x").map(n => parseInt(n, 10));
+                canvas.width = w;
+                canvas.height = h;
+                lastSend = performance.now();
+                loop();
+            };
+        }
+
+        function stopCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(t => t.stop());
+                currentStream = null
+            }
+            video.srcObject = null
+        }
+
+        function loop(now = performance.now()) {
+            if (!streaming || !ws || ws.readyState !== WebSocket.OPEN) return;
+            const needSend = (now - lastSend) >= targetInterval;
+            if (needSend && !sendingNow) {
+                lastSend = now;
+                sendOneFrame()
+            }
+            rafId = requestAnimationFrame(loop);
+        }
+
+        function sendOneFrame() {
+            sendingNow = true;
+            const qMax = parseFloat(jpgQ.value) || 0.65;
+            adaptiveQ = Math.max(0.25, Math.min(qMax, adaptiveQ));
+            try {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+            } catch (e) {
+                sendingNow = false;
+                return
+            }
+            if (ws && ws.bufferedAmount > 1000000) {
+                adaptiveQ = Math.max(0.25, adaptiveQ - 0.05)
+            } else {
+                adaptiveQ = Math.min(qMax, adaptiveQ + 0.015)
+            }
+            try {
+                const dataUrl = canvas.toDataURL("image/jpeg", adaptiveQ);
+                const b64 = dataUrl.split(",")[1];
+                if (ws && ws.readyState === WebSocket.OPEN)
+                    ws.send(JSON.stringify({
+                        type: "frame",
+                        image: b64
+                    }));
+            } catch (e) {} finally {
+                sendingNow = false
+            }
+        }
+
+        setStatus("waiting", "disconnected");
+    </script>
+
 </body>
-</html>
 
+</html>
